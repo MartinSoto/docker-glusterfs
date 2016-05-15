@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+
+  server1:
+    image: martinsoto/gluster-server
+    cap_add:
+      - SYS_ADMIN
+    environment:
+      - GLUSTER_PROBE_SERVERS=server2
+      - GLUSTER_BRICKS=/var/lib/gluster/bricks/brick1/data
+    volumes:
+      - workdir1:/var/lib/glusterd
+      - brick1:/var/lib/gluster/bricks/brick1
+
+  server2:
+    image: martinsoto/gluster-server
+    cap_add:
+      - SYS_ADMIN
+    environment:
+      - GLUSTER_BRICKS=/var/lib/gluster/bricks/brick2/data
+    volumes:
+      - workdir2:/var/lib/glusterd
+      - brick2:/var/lib/gluster/bricks/brick2
+
+  client1:
+    image: martinsoto/gluster-client
+    privileged: true
+    command:
+      sleep 36500d
+
+  client2:
+    image: martinsoto/gluster-client
+    privileged: true
+    command:
+      sleep 36500d
+
+volumes:
+
+  workdir1: {}
+  workdir2: {}
+
+  brick1: {}
+  brick2: {}
